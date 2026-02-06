@@ -1,0 +1,50 @@
+# Chapter 01 - Example level structure
+# Replace with actual story content
+
+id: chapter_01
+title: "初次相遇"
+order: 1
+start_node: intro
+
+nodes:
+  intro:
+    speaker: narrator
+    text: "你的手机屏幕突然闪了一下，一个模糊的身影出现在屏幕中央。"
+    next_node: yade_appears
+
+  yade_appears:
+    speaker: yade
+    text: "嗨...你能看到我吗？"
+    options:
+      - id: friendly
+        text: "你好！你是谁？"
+        affinity_delta: 2
+        next_node: yade_intro_friendly
+      - id: cautious
+        text: "...你是怎么出现在我手机里的？"
+        affinity_delta: 0
+        next_node: yade_intro_cautious
+      - id: hostile
+        text: "什么鬼？"
+        affinity_delta: -1
+        next_node: yade_intro_hostile
+
+  yade_intro_friendly:
+    speaker: yade
+    text: "太好了！终于有人能看到我了。我叫亚德，不知道为什么出现在了这里..."
+    next_node: ending
+
+  yade_intro_cautious:
+    speaker: yade
+    text: "这个嘛...说来话长。我也不太确定。但我叫亚德，你好。"
+    next_node: ending
+
+  yade_intro_hostile:
+    speaker: yade
+    text: "别害怕！我不是什么奇怪的东西...大概吧。我叫亚德。"
+    next_node: ending
+
+  ending:
+    speaker: narrator
+    text: "亚德的身影在屏幕上逐渐变得清晰起来。看来这将是一段奇妙旅程的开始。"
+    is_ending: true
