@@ -9,7 +9,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.database import get_db, async_session
-from app.db.redis import get_redis
+from app.db.redis import get_redis_client
 from app.models.player import Player
 from app.models.chat_history import ChatMessage
 from app.services.chat_service import ChatService
@@ -43,7 +43,7 @@ async def chat_websocket(websocket: WebSocket, player_id: int):
     """
     await websocket.accept()
 
-    redis = await get_redis()
+    redis = get_redis_client()
     chat_svc = ChatService(redis)
     character_prompt = _load_character_prompt("yade")
 

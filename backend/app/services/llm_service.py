@@ -1,16 +1,23 @@
 """LLM service - integrates with DashScope (通义千问max) for free chat."""
 
+from __future__ import annotations
+
+import json
 from collections.abc import AsyncGenerator
-
-import dashscope
-from dashscope import Generation
-
 from app.config import settings
+
+
+def _get_generation():
+    """Lazy import of dashscope.Generation to avoid import-time crashes in test."""
+    import dashscope
+    from dashscope import Generation
+
+    dashscope.api_key = settings.DASHSCOPE_API_KEY
+    return Generation
 
 
 class LLMService:
     def __init__(self):
-        dashscope.api_key = settings.DASHSCOPE_API_KEY
         self.model = settings.LLM_MODEL
 
     def _build_system_prompt(self, character_prompt: str, affinity_score: int, memory_facts: dict) -> str:
@@ -46,6 +53,7 @@ class LLMService:
 
         full_messages = [{"role": "system", "content": system_prompt}] + messages
 
+        Generation = _get_generation()
         responses = Generation.call(
             model=self.model,
             messages=full_messages,
@@ -78,6 +86,7 @@ class LLMService:
             "只返回数字，不要其他内容。"
         )
 
+        Generation = _get_generation()
         response = Generation.call(
             model=self.model,
             messages=[
@@ -106,6 +115,7 @@ class LLMService:
             "如果没有新信息，返回空的 {}"
         )
 
+        Generation = _get_generation()
         response = Generation.call(
             model=self.model,
             messages=[
@@ -116,7 +126,6 @@ class LLMService:
         )
 
         if response.status_code == 200:
-            import json
             try:
                 content = response.output.choices[0].message.content.strip()
                 return json.loads(content)

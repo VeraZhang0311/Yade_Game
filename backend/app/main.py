@@ -5,10 +5,8 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.routes import chat, levels, player, affinity
-from app.api.websocket import chat_ws
 from app.db.database import engine, Base
-from app.db.redis import redis_client
+from app.db.redis import close_redis
 
 
 @asynccontextmanager
@@ -19,7 +17,7 @@ async def lifespan(app: FastAPI):
     yield
     # Shutdown: close connections
     await engine.dispose()
-    await redis_client.close()
+    await close_redis()
 
 
 app = FastAPI(
@@ -37,13 +35,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# REST routes
+# --- Routes ---
+# Import here (not at top level) so modules with heavy deps don't block startup
+from app.api.routes import player, levels, chat, affinity  # noqa: E402
+from app.api.websocket import chat_ws  # noqa: E402
+
 app.include_router(player.router, prefix="/api/player", tags=["player"])
 app.include_router(levels.router, prefix="/api/levels", tags=["levels"])
 app.include_router(chat.router, prefix="/api/chat", tags=["chat"])
 app.include_router(affinity.router, prefix="/api/affinity", tags=["affinity"])
-
-# WebSocket
 app.include_router(chat_ws.router, tags=["websocket"])
 
 
