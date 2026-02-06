@@ -1,0 +1,74 @@
+# ========================
+# Python
+# ========================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+*.whl
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# ========================
+# Environment & Secrets
+# ========================
+.env
+*.pem
+*.key
+
+# ========================
+# IDE / Editors
+# ========================
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+*.sublime-project
+*.sublime-workspace
+
+# ========================
+# OS
+# ========================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ========================
+# Testing & Coverage
+# ========================
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+.tox/
+
+# ========================
+# Type checking / Linting
+# ========================
+.mypy_cache/
+.ruff_cache/
+
+# ========================
+# Docker (local volumes)
+# ========================
+docker/data/
+
+# ========================
+# Misc
+# ========================
+*.log
+*.bak
+*.tmp
