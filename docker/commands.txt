@@ -1,0 +1,5 @@
+启动docker:
+docker compose up -d
+
+停掉docker:
+docker compose down（加 -v 会连 volume 数据一起删）
