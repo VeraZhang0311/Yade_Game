@@ -37,8 +37,10 @@ class LevelService:
                 id=node_id,
                 speaker=node_data.get("speaker", "yade"),
                 text=node_data["text"],
+                action=node_data.get("action"),
                 options=options,
                 next_node=node_data.get("next_node"),
+                condition=node_data.get("condition"),
                 is_ending=node_data.get("is_ending", False),
             )
 
@@ -46,6 +48,7 @@ class LevelService:
             id=raw["id"],
             title=raw["title"],
             order=raw["order"],
+            scene=raw.get("scene", ""),
             start_node=raw["start_node"],
             nodes=nodes,
         )
