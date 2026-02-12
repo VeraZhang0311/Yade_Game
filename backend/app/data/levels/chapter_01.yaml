@@ -1,50 +1,44 @@
-# Chapter 01 - Example level structure
-# Replace with actual story content
+# ============================================================
+# 第一章：初次相遇
+# ============================================================
+# 后端简化版：只存选项→好感度映射和关卡元数据
+# 对话内容由前端 YarnSpinner (.yarn) 管理
+#
+# 格式说明:
+#   choices:
+#     <node_id>:           # 与前端 .yarn 文件中的选择节点 ID 一致
+#       <option_id>:
+#         affinity_delta:  # 好感度变化 (正/负/0)
+#         is_major: true   # 可选，标记影响剧情走向的关键选择
+#
+# 前后端需对齐: node_id 和 option_id 命名必须前后端一致
+# ============================================================
 
 id: chapter_01
 title: "初次相遇"
 order: 1
-start_node: intro
 
-nodes:
-  intro:
-    speaker: narrator
-    text: "你的手机屏幕突然闪了一下，一个模糊的身影出现在屏幕中央。"
-    next_node: yade_appears
+choices:
+  # 选择框 1：初次回应（无关紧要）
+  choice_1:
+    A: { affinity_delta: 1 }
+    B: { affinity_delta: 0 }
+    C: { affinity_delta: -1 }
 
-  yade_appears:
-    speaker: yade
-    text: "嗨...你能看到我吗？"
-    options:
-      - id: friendly
-        text: "你好！你是谁？"
-        affinity_delta: 2
-        next_node: yade_intro_friendly
-      - id: cautious
-        text: "...你是怎么出现在我手机里的？"
-        affinity_delta: 0
-        next_node: yade_intro_cautious
-      - id: hostile
-        text: "什么鬼？"
-        affinity_delta: -1
-        next_node: yade_intro_hostile
+  # 选择框 2：关于市场（无关紧要）
+  choice_2:
+    A: { affinity_delta: 1 }
+    B: { affinity_delta: 0 }
+    C: { affinity_delta: 0 }
 
-  yade_intro_friendly:
-    speaker: yade
-    text: "太好了！终于有人能看到我了。我叫亚德，不知道为什么出现在了这里..."
-    next_node: ending
+  # 选择框 3：关键选择（影响剧情走向）
+  choice_3:
+    A: { affinity_delta: 3, is_major: true }
+    B: { affinity_delta: 1, is_major: true }
+    C: { affinity_delta: 0, is_major: true }
 
-  yade_intro_cautious:
-    speaker: yade
-    text: "这个嘛...说来话长。我也不太确定。但我叫亚德，你好。"
-    next_node: ending
-
-  yade_intro_hostile:
-    speaker: yade
-    text: "别害怕！我不是什么奇怪的东西...大概吧。我叫亚德。"
-    next_node: ending
-
-  ending:
-    speaker: narrator
-    text: "亚德的身影在屏幕上逐渐变得清晰起来。看来这将是一段奇妙旅程的开始。"
-    is_ending: true
+  # 选择框 4：最终确认行为
+  choice_4:
+    A: { affinity_delta: 2, is_major: true }
+    B: { affinity_delta: 0, is_major: true }
+    C: { affinity_delta: 1, is_major: true }

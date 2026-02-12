@@ -1,0 +1,310 @@
+# ============================================================
+# 第一章：初次相遇 — 情景1：与小女孩的初遇
+# ============================================================
+#
+# YAML 写作指南（给 content team）:
+#
+# speaker 类型:
+#   narrator    — 旁白、场景描写
+#   yade        — 亚德的对话
+#   yade_inner  — 亚德的内心独白（UI 上会用不同样式显示）
+#   girl        — 小女孩的对话（可以换成任何 NPC 名）
+#   action      — 纯动作描写，无对话
+#
+# action 字段: 角色的动作/表情描写，显示在对话文字之前
+#   例: action: "抬起头，拍拍手上的泥土"
+#
+# options 字段: 玩家选项
+#   affinity_delta: 好感度变化值（正=加分，负=减分，0=无影响）
+#   is_major: true  — 标记为关键选择（影响剧情走向）
+#
+# condition 字段: 条件跳转，根据之前选择决定下一个节点
+#   格式: {之前的选择节点ID: {选项ID: 目标节点ID, ...}}
+#
+# is_ending: true — 标记关卡结束节点，触发解锁下一关
+# ============================================================
+
+id: chapter_01
+title: "初次相遇"
+order: 1
+scene: "情景1: 与小女孩的初遇"
+start_node: prologue_1
+
+nodes:
+  # --- 开场旁白：世界描写 ---
+
+  prologue_1:
+    speaker: narrator
+    text: >
+      风，在一片片翠绿的涟漪间游荡着，漫山遍野，此起彼伏。
+      一条山涧的小路紧贴着溪流，犹如一道细细的线条隔开了两侧连绵的山丘，
+      如同神话中被劈开的大海换上了嫩绿色的披肩。
+    next_node: prologue_2
+
+  prologue_2:
+    speaker: narrator
+    text: >
+      在道路的尽头，海水缓缓拍打着白色的沙，时间仿佛都要驻足在这片祥和的静匿之中，
+      伫立着一座小镇，就由它记录着围绕在这大陆边缘的风景。
+    next_node: prologue_3
+
+  prologue_3:
+    speaker: narrator
+    text: >
+      穿过熙熙攘攘的小镇广场，晌午的太阳正将璀璨金箔注入进喷泉中央喷溅的水滴，
+      几个孩子穿过松散的人群，活蹦乱跳地往着道路尽头的山坡跑去。
+    next_node: cabin_scene
+
+  # --- 木屋场景 ---
+
+  cabin_scene:
+    speaker: narrator
+    text: >
+      亚德走进了山坡上的一间木屋，这里是小镇建筑的边缘，窗外不远处能看见几只正在食草的绵羊。
+      木屋不算太大，一只长方形餐桌摆在中间的位置紧贴着有两扇侧窗的墙壁，
+      床边是一座老旧但精致的写字台正对着窗外的羊群，门口的右侧是一处简易的厨用区域，
+      由沉重的青色石块拱起的小灶台和案板，在屋底另一个角落，
+      一座普通石块铸成的壁炉静靠在那里，旁边整齐地码放着一堆生火用的木头。
+    next_node: yade_writing
+
+  yade_writing:
+    speaker: narrator
+    text: >
+      亚德在窗前坐下，取出一卷牛皮囊袋，将他的书写用具摊开在写字台上——
+      一支雕刻精致花纹的银质笔尖之上插着一片奇特的灰色羽毛，
+      一个银质的方形容器中心镶嵌了一枚红宝石，尚盛有一半瓶的深蓝色墨水。
+      亚德湛了一笔墨水，开始在笔记本上书写。
+    next_node: town_intro
+
+  town_intro:
+    speaker: narrator
+    text: >
+      小镇的名字叫做伊丽斯，它坐落在大陆东北方莱什山脉的起端，
+      向它的东方便是广阔无垠的欧德之海。
+    next_node: hunger
+
+  # --- 触发出门 ---
+
+  hunger:
+    speaker: narrator
+    text: "咕噜噜——咕噜～回过神来，太阳已不再是与远方山岭齐平的高度。"
+    next_node: yade_go_out
+
+  yade_go_out:
+    speaker: yade_inner
+    text: "也该去采购一些食材吧。"
+    next_node: yade_leaves
+
+  yade_leaves:
+    speaker: narrator
+    text: "亚德走出了木屋。"
+    next_node: meet_girl
+
+  # --- 遇见小女孩 ---
+
+  meet_girl:
+    speaker: narrator
+    text: >
+      从山坡向下走去，亚德看见道路对面的一间屋外有一个小女孩
+      正蹲在地上鼓弄门前小小土坡庭院中的花束。
+      女孩的眼睛看向了亚德，饶有兴致地打量着他的装束，
+      随后挤出一脸灿烂的笑容。
+    next_node: girl_greet
+
+  girl_greet:
+    speaker: girl
+    action: "抬起头，拍拍手上的泥土"
+    text: "你是新来的吗？我之前没见过你。"
+    next_node: girl_greet_narration
+
+  girl_greet_narration:
+    speaker: narrator
+    text: "她站起身，怀里抱着几枝刚摘下的花，花瓣被风吹得轻轻颤动。"
+    next_node: yade_observe
+
+  yade_observe:
+    speaker: yade_inner
+    text: >
+      她的目光很直接，没有试探，也没有防备。
+      这种眼神，在旅途中并不常见。
+    next_node: choice_1
+
+  # --- 选择框 1：初次回应（无关紧要） ---
+
+  choice_1:
+    speaker: yade
+    text: ""
+    options:
+      - id: A
+        text: "嗯，刚到不久。"
+        affinity_delta: 1
+        next_node: after_choice_1
+      - id: B
+        text: "我只是路过。"
+        affinity_delta: 0
+        next_node: after_choice_1
+      - id: C
+        text: "（微微点头，不作回答）"
+        affinity_delta: -1
+        next_node: after_choice_1
+
+  after_choice_1:
+    speaker: narrator
+    text: "女孩歪着头看了亚德一会儿，像是在确认什么。"
+    next_node: girl_market_ask
+
+  girl_market_ask:
+    speaker: girl
+    text: "那你也是要去市场吗？"
+    next_node: girl_market_narration
+
+  girl_market_narration:
+    speaker: narrator
+    text: "她指了指山坡下方，镇广场的方向已经开始热闹起来。"
+    next_node: yade_market_thought
+
+  yade_market_thought:
+    speaker: yade_inner
+    text: "市场。人声，气味，交易。这些地方总是让我想起时间流动得最快的样子。"
+    next_node: choice_2
+
+  # --- 选择框 2：关于市场（无关紧要） ---
+
+  choice_2:
+    speaker: yade
+    text: ""
+    options:
+      - id: A
+        text: "是的，我正打算去。"
+        affinity_delta: 1
+        next_node: after_choice_2
+      - id: B
+        text: "还没决定。"
+        affinity_delta: 0
+        next_node: after_choice_2
+      - id: C
+        text: "你要去？"
+        affinity_delta: 0
+        next_node: after_choice_2
+
+  after_choice_2:
+    speaker: narrator
+    text: "女孩的眼睛亮了一下。"
+    next_node: girl_mother
+
+  girl_mother:
+    speaker: girl
+    text: "我妈妈以前总是这个时候去买菜。"
+    next_node: girl_mother_pause
+
+  girl_mother_pause:
+    speaker: girl
+    action: "停顿了一下"
+    text: "现在她不在，我有点不太会选。"
+    next_node: girl_mother_narration
+
+  girl_mother_narration:
+    speaker: yade_inner
+    text: "她说得很轻，却没有什么回避。自然地像是在陈述天气。"
+    next_node: choice_3
+
+  # --- 选择框 3：关键选择（影响剧情走向） ---
+
+  choice_3:
+    speaker: yade
+    text: ""
+    options:
+      - id: A
+        text: "我想我可以陪你一起。"
+        affinity_delta: 3
+        is_major: true
+        next_node: girl_react_milestone
+      - id: B
+        text: "你想买些什么？"
+        affinity_delta: 1
+        is_major: true
+        next_node: girl_react_milestone
+      - id: C
+        text: "嗯，市场离得并不远。"
+        affinity_delta: 0
+        is_major: true
+        next_node: girl_react_milestone
+
+  girl_react_milestone:
+    speaker: narrator
+    text: "女孩抱紧了花束，笑得更明显了。"
+    next_node: branch_check
+
+  # --- 条件分支：根据 choice_3 的选择走不同路线 ---
+
+  branch_check:
+    speaker: narrator
+    text: ""
+    condition:
+      choice_3:
+        A: branch_together
+        B: branch_together
+        C: branch_alone
+
+  # --- 分支A：一起去市场 ---
+
+  branch_together:
+    speaker: girl
+    text: "真的吗？那太好了！你看起来就……很会选东西的样子！"
+    next_node: yade_together_thought
+
+  yade_together_thought:
+    speaker: yade_inner
+    text: "我并不擅长选择。但或许，这种简单的陪伴本身并不需要太多技巧。"
+    next_node: choice_4
+
+  # --- 分支B：独自去市场 ---
+
+  branch_alone:
+    speaker: girl
+    text: "那我等一下自己再去。市场里的人很多，不会迷路的！"
+    next_node: yade_alone_thought
+
+  yade_alone_thought:
+    speaker: yade_inner
+    text: "她比我想象中更习惯独自面对这些。也许，这也是这个小镇在教她成长。"
+    next_node: choice_4
+
+  # --- 选择框 4：最终确认行为 ---
+
+  choice_4:
+    speaker: yade
+    text: ""
+    options:
+      - id: A
+        text: "（与她并肩走下山坡）"
+        affinity_delta: 2
+        is_major: true
+        next_node: ending_together
+      - id: B
+        text: "（目送她回屋，转身离开）"
+        affinity_delta: 0
+        is_major: true
+        next_node: ending_alone
+      - id: C
+        text: "（短暂停留，再做决定）"
+        affinity_delta: 1
+        is_major: true
+        next_node: ending_linger
+
+  # --- 结局节点 ---
+
+  ending_together:
+    speaker: narrator
+    text: "亚德与小女孩一同走下山坡，向着热闹的市场走去。"
+    is_ending: true
+
+  ending_alone:
+    speaker: narrator
+    text: "亚德独自走向市场，身后是小女孩安静的目送。"
+    is_ending: true
+
+  ending_linger:
+    speaker: narrator
+    text: "亚德在山坡上驻足片刻，海风卷起远处的铃声，一切都不急。"
+    is_ending: true

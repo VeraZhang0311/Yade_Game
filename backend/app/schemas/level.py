@@ -1,36 +1,33 @@
-"""Level-related Pydantic schemas."""
+"""Level-related Pydantic schemas.
+
+Simplified for frontend-driven architecture:
+- Dialogue tree lives in frontend (YarnSpinner .yarn files)
+- Backend only stores: choice→affinity mapping, level ordering, player progress
+"""
 
 from pydantic import BaseModel
 
 
-class DialogueOption(BaseModel):
-    """A single selectable option in a dialogue node."""
-    id: str
-    text: str
+# --- Internal: loaded from YAML ---
+
+class ChoiceOption(BaseModel):
+    """Backend config for a single choice option."""
     affinity_delta: int = 0
-    next_node: str  # which node this choice leads to
+    is_major: bool = False
 
 
-class DialogueNode(BaseModel):
-    """A single dialogue node (one screen of dialogue)."""
-    id: str
-    speaker: str  # "yade", "narrator", etc.
-    text: str
-    options: list[DialogueOption] | None = None  # None = auto-advance
-    next_node: str | None = None  # for auto-advance nodes
-    is_ending: bool = False
-
-
-class LevelData(BaseModel):
-    """Full level definition loaded from YAML."""
+class LevelConfig(BaseModel):
+    """Backend-side level config loaded from YAML (no dialogue content)."""
     id: str
     title: str
     order: int
-    start_node: str
-    nodes: dict[str, DialogueNode]
+    choices: dict[str, dict[str, ChoiceOption]]  # node_id -> {option_id -> config}
 
+
+# --- API request/response schemas ---
 
 class LevelSummary(BaseModel):
+    """Returned when listing levels with unlock status."""
     id: str
     title: str
     order: int
@@ -38,12 +35,36 @@ class LevelSummary(BaseModel):
 
 
 class MakeChoiceRequest(BaseModel):
+    """Frontend tells backend: player chose option X at node Y in level Z."""
     level_id: str
     node_id: str
     choice_id: str
 
 
 class MakeChoiceResponse(BaseModel):
-    next_node: DialogueNode | None
+    """Backend returns: affinity change from this choice."""
     affinity_delta: int
     new_affinity_total: int
+    affinity_tier: str
+
+
+class LevelCompleteRequest(BaseModel):
+    """Frontend tells backend: player finished a level."""
+    level_id: str
+    ending_node: str | None = None  # optional: which ending was reached
+
+
+class LevelCompleteResponse(BaseModel):
+    """Backend returns: what got unlocked."""
+    next_level_id: str | None
+    unlocked: bool
+    total_affinity: int
+    affinity_tier: str
+
+
+class LevelProgressResponse(BaseModel):
+    """Current player progress across all levels."""
+    current_level: str
+    unlocked_levels: list[str]
+    total_affinity: int
+    affinity_tier: str
