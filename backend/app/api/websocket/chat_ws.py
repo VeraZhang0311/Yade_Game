@@ -1,34 +1,20 @@
 """WebSocket endpoint for streaming free-chat with Yade."""
 
 import json
-from pathlib import Path
 
-import yaml
-from fastapi import APIRouter, WebSocket, WebSocketDisconnect, Depends
+from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.db.database import get_db, async_session
+from app.db.database import async_session
 from app.db.redis import get_redis_client
 from app.models.player import Player
 from app.models.chat_history import ChatMessage
 from app.services.chat_service import ChatService
 from app.services.affinity_service import affinity_service
-from app.services.llm_service import llm_service
+from app.services.llm_service import llm_service, load_character_prompt
 from app.services.memory_service import memory_service
 
 router = APIRouter()
-
-CHARACTER_DIR = Path(__file__).parent.parent.parent / "data" / "characters"
-
-
-def _load_character_prompt(character: str = "yade") -> str:
-    path = CHARACTER_DIR / f"{character}.yaml"
-    if path.exists():
-        with open(path, "r", encoding="utf-8") as f:
-            data = yaml.safe_load(f)
-        return data.get("system_prompt", "")
-    return ""
 
 
 @router.websocket("/ws/chat/{player_id}")
@@ -45,7 +31,7 @@ async def chat_websocket(websocket: WebSocket, player_id: int):
 
     redis = get_redis_client()
     chat_svc = ChatService(redis)
-    character_prompt = _load_character_prompt("yade")
+    character_prompt = load_character_prompt("yade")
 
     try:
         while True:
